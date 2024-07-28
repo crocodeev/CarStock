@@ -1,0 +1,1 @@
+export { modelApi, useGetModelsByMarkQuery } from "./modelSlice";
