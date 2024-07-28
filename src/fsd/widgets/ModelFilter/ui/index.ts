@@ -1,3 +1,3 @@
-import ModelFilter from './ModelFilter.tsx'
+import ModelFilter from './ModelFilter'
 
 export { ModelFilter }

@@ -41,13 +41,13 @@ class Car {
         
     }
 
-    async paginateByMarkAndModel(mark: string, limit: number, skip: number, model: string): Promise<TCarModel[] | undefined> {
+    async paginateByMarkAndModel(mark: string, limit: number, skip: number, models: string[]): Promise<TCarModel[] | undefined> {
 
 
         try {
 
             const pipeline = [
-                { "$match": { "mark": mark, "model": model }},
+                { "$match": { "mark": mark, "model": { $in: models} }},
                 { "$sort": { "_id": 1 }},
                 { "$skip": skip * limit },
                 { "$limit": limit}

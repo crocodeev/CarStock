@@ -27,7 +27,6 @@ class Mark {
             const db = await connectDB();
             const result = await db.collection(this.collection).aggregate(pipeline).toArray();
 
-            console.log(result);
             return result as TMarkModel[];
             
         } catch (error) {

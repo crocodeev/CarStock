@@ -1,7 +1,8 @@
 'use client';
 
 import { useGetModelsByMarkQuery } from "@/fsd/enteties/model/model";
-import { useAppSelector } from "@/fsd/shared/libs/store/redux";
+import { setModel } from "@/fsd/features/filter/model/filterSlice";
+import { useAppDispatch, useAppSelector } from "@/fsd/shared/libs/store/redux";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { Select, Spin, Alert } from "antd";
 import type { SelectProps } from "antd";
@@ -9,6 +10,7 @@ import type { SelectProps } from "antd";
 export default function Marks() {
 
   const mark = useAppSelector(state => state.filter.mark);
+  const dispatch = useAppDispatch();
   
   const { data, error, isError, isLoading } = useGetModelsByMarkQuery(mark || skipToken);
   
@@ -30,8 +32,8 @@ export default function Marks() {
   const options: SelectProps['options'] = data?.data?.map(item => ({ value: item }));
 
   const handleChange = (value: string[]) => {
-    console.log(`selected ${value}`);
-    
+
+      dispatch(setModel(value));
   }
 
   return (

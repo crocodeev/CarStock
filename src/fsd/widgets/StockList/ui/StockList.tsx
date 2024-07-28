@@ -1,14 +1,19 @@
 'use client'
 
-import { useGetCarByMarkPaginatedQuery, useGetCarPaginatedQuery } from "@/fsd/enteties/car/model/carSlice";
+import { useGetCarPaginatedQuery } from "@/fsd/enteties/car/model/carSlice";
 import { useGetAllMarksResult } from "@/fsd/enteties/mark/model/markSlice";
-import { useAppSelector } from "@/fsd/shared/libs/store/redux";
+import { useAppDispatch, useAppSelector } from "@/fsd/shared/libs/store/redux";
+import { DataType } from "../model";
 import { Table } from "antd"
 import { TableProps } from "antd/lib";
+import { rowFormatter } from "../libs/rowFormater";
+import { setCurrentPage, setItemsPerPage } from "@/fsd/features/pagination";
 
 export default function StockList() {
 
+  const dispatch = useAppDispatch();
   const filter = useAppSelector(state => state.filter);
+  const pagination = useAppSelector(state => state.pagination);
   const marks = useGetAllMarksResult().data?.data;
 
   let totalPages = 0;
@@ -16,35 +21,34 @@ export default function StockList() {
   if(marks && filter.mark){
     const selectedMarkAmount = marks.find(item => item.name === filter.mark)?.amount;
     if(selectedMarkAmount !== undefined){
-      totalPages = selectedMarkAmount;
+      totalPages = Math.ceil(selectedMarkAmount/pagination.itemsPerPage);
     }
   }
-
-  console.log(`Total pages ${totalPages}`);
   
   const skipLoad = filter.mark === undefined;
 
-  console.log(`Should skip ${skipLoad}`);
-  
-  
-  const { data, error, isError, isLoading } = useGetCarPaginatedQuery({ mark: filter.mark, limit: "10", skip: "0"}, {
+  const { data, isLoading } = useGetCarPaginatedQuery({ mark: filter.mark, 
+    limit: pagination.itemsPerPage.toString(), 
+    skip: (pagination.currentPage - 1).toString(),
+    model: filter.model.join(',')
+  },{
     skip: skipLoad
   });
 
-  const handleTableChange = () => {
 
+  const handleTableChange: TableProps<DataType>["onChange"] = (event) => {
+
+    if(event.current && event.current !== pagination.currentPage){
+
+      dispatch(setCurrentPage(event.current))
+    }
+
+    if(event.pageSize && event.pageSize !== pagination.itemsPerPage){
+
+      dispatch(setItemsPerPage(event.pageSize))
+    }
   } 
 
-
-  interface DataType {
-    key: string,
-    id: string,
-    markModel: string,
-    modification: string,
-    equipment: string,
-    price: string,
-    createdAt: string
-  }
 
   const columns: TableProps<DataType>['columns'] = [
     {
@@ -83,15 +87,20 @@ export default function StockList() {
 
   if(data?.data){
 
-    tableData = data?.data?.map(item => ({
-      key: item._id,
-      id: item._id,
-      markModel: `${item.mark} ${item.model}`,
-      modification: `${item.engine.volume} ${item.engine.power} ${item.drive}`,
-      equipment: `${item.equipmentName}`,
-      price: `${item.price}`,
-      createdAt: `${item.createdAt}`
-    }));
+    tableData = data?.data?.map(item => {
+
+      const formatted = new rowFormatter(item);
+
+      return {
+        key: formatted.id,
+        id: formatted.id,
+        markModel: formatted.markModel,
+        modification: formatted.modification,
+        equipment: formatted.equipment,
+        price: formatted.price,
+        createdAt: formatted.createdAt
+      }
+  });
 
   }else{
 
@@ -101,14 +110,20 @@ export default function StockList() {
 
   return (
     <Table 
-    columns={columns} 
-    dataSource={tableData}
-    pagination={{
-      current: 1,
-      pageSize: 10,
-      total: totalPages
-    }}
-    loading={isLoading}
+      columns={columns} 
+      dataSource={tableData}
+      rowKey="id"
+      pagination={{
+        current: pagination.currentPage,
+        pageSize: pagination.itemsPerPage,
+        total: totalPages,
+        showSizeChanger: true
+      }}
+      scroll={{x:950,y:"calc(90vh - 300px)" }}
+      size="large"
+      sticky
+      loading={isLoading}
+      onChange={handleTableChange}
     />
   )
 }

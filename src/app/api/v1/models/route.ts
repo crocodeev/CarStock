@@ -9,7 +9,6 @@ export async function GET(req: NextRequest) {
 
     const mark = searchParams.get("mark");
     
-    
     try {
 
         if(mark) {

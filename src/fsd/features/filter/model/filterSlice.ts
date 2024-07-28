@@ -4,7 +4,7 @@ import { TFilter } from "./types";
 
 const initialState: TFilter = {
     mark: undefined,
-    model: undefined
+    model: []
 }
 
 export const filterSlice = createSlice({
@@ -12,7 +12,7 @@ export const filterSlice = createSlice({
     initialState,
     reducers: {
         setMark: (state, action: PayloadAction<TFilter['mark']>) => {
-            console.log(action.type);
+      
             state.mark = action.payload;
         },
         setModel: (state, action: PayloadAction<TFilter['model']>) => {

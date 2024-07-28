@@ -10,14 +10,17 @@ export async function GET(req: NextRequest) {
     const mark = searchParams.get("mark");
     const limit = searchParams.get("limit");
     const skip = searchParams.get("skip");
-    const model = searchParams.get("model");
+    /**
+     * @todo remove crutch
+     */
+    const model = searchParams.get("model") || "undefined";
 
+   
     try {
 
         if(mark && limit && skip) {
             
             const result = await getCarsPaginated(mark, limit, skip, model);
-
             return result;
 
         }else{

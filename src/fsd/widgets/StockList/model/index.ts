@@ -1,1 +1,3 @@
-export { }
+export type { DataType } from "./types";
+
+

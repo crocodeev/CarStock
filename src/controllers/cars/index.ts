@@ -3,10 +3,13 @@ import { connectDB } from "@/config/db";
 import { Car } from "@/models/car";
 import { handleError } from "@/utils/handleError";
 
-async function getCarsPaginated(mark: string, limit: string, skip: string, model: string) { 
+/**
+ * 
+ * @todo remove crutch
+ */
 
-        console.log({ mark, limit, skip, model });
-    
+async function getCarsPaginated(mark: string, limit: string, skip: string, model: string = "undefined") { 
+
     try {
 
         const db = await connectDB();
@@ -21,12 +24,11 @@ async function getCarsPaginated(mark: string, limit: string, skip: string, model
 
             result = await car.paginateByMark(mark, parseInt(limit), parseInt(skip));
         }else{
-            
-            result = await car.paginateByMarkAndModel(mark, parseInt(limit), parseInt(skip), model);
-        }
 
-        console.log(result);
-        
+            const models = model.split(',');
+            
+            result = await car.paginateByMarkAndModel(mark, parseInt(limit), parseInt(skip), models);
+        }
 
         if(result) {
 

@@ -11,9 +11,6 @@ export const carApi = createApi({
             query: (args) => {
                 const { mark, limit, skip, model } = args;
 
-                console.log(`cars?mark=${mark}&skip=${skip}&limit=${limit}&model=${model}`);
-                
-
                 return {
                     url: `cars?mark=${mark}&skip=${skip}&limit=${limit}&model=${model}`
                 }

@@ -6,6 +6,6 @@ export type TFilter = {
     /**
      * car model
      */
-    model: string | undefined
+    model: string[]
 }
 
