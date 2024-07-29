@@ -15,9 +15,11 @@ export default function Marks() {
   useEffect(() => {
     if(data?.data){
       const marks = data.data;
+      console.log(marks);
+      
       dispatch(setMark(marks[0].name));
     }
-  },[]);
+  },[data]);
 
   const handleClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     
