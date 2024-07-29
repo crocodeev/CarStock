@@ -1,3 +1,3 @@
-import StockList from './StockList.tsx'
+import StockList from './StockList'
 
 export { StockList }

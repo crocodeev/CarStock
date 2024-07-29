@@ -4,7 +4,7 @@ import { useGetAllMarksQuery } from "@/fsd/enteties/mark"
 import { Space, Spin, Alert } from "antd";
 import { Mark } from "@/fsd/enteties/mark";
 import { useAppDispatch } from "@/fsd/shared/libs/store/redux";
-import { setMark } from "@/fsd/features/filter/model/filterSlice";
+import { setMark, setModel } from "@/fsd/features/filter/model/filterSlice";
 import { useEffect } from "react";
 
 export default function Marks() {
@@ -17,14 +17,14 @@ export default function Marks() {
       const marks = data.data;
       dispatch(setMark(marks[0].name));
     }
-  },[data]);
+  },[]);
 
   const handleClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     
     const mark = event.currentTarget.innerText;
     
     dispatch(setMark(mark));
-    
+    dispatch(setModel([]));
   }
 
   if (isLoading) return  <Spin size="large" />

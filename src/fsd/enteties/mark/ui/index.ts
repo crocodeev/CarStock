@@ -1,3 +1,3 @@
-import Mark from './Mark.tsx'
+import Mark from './Mark'
 
 export { Mark }

@@ -1,3 +1,3 @@
-import Cars from './Cars.tsx'
+import Cars from './Cars'
 
 export { Cars }
